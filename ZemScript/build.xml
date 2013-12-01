@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="test" name="ZemScript">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <property name="jar.file" value="build/zem.jar"/>
+    <property name="junit.lib" value="lib/junit-4.6.jar"/>
+    <target name="init">
+        <mkdir dir="build"/>
+        <mkdir dir="build/debug"/>
+        <mkdir dir="build/release"/>
+        <mkdir dir="dist"/>
+    </target>
+    <target name="clean">
+        <delete dir="build"/>
+        <delete dir="dist"/>
+    </target>
+    <target name="build-debug" depends="init">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build/debug" source="${source}" target="${target}">
+            <classpath>
+                <pathelement location="${junit.lib}"/>
+            </classpath>
+            <src path="src"/>
+            <src path="test"/>
+        </javac>
+    </target>
+    <target name="build-release" depends="init">
+        <javac destdir="build/release" source="${source}" target="${target}">
+            <src path="src"/>
+        </javac>
+    </target>
+    <target name="build" depends="build-debug, build-release"/>
+    <target name="test" depends="build-debug">
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath>
+                <pathelement location="build/debug"/>
+                <pathelement location="${junit.lib}"/>
+            </classpath>
+            <test name="net.zeminvaders.lang.PeekReaderTest"/>
+            <test name="net.zeminvaders.lang.LexerTest"/>
+            <test name="net.zeminvaders.lang.ParserTest"/>
+            <test name="net.zeminvaders.lang.InterpreterTest"/>
+        </junit>
+    </target>
+    <target name="sample" depends="build-debug">
+        <java classname="Test" classpath="build/debug"/>
+    </target>
+    <target name="bin-dist" depends="build-release">
+        <jar destfile="${jar.file}" basedir="build/release">
+            <manifest>
+                <attribute name="Main-Class" value="net.zeminvaders.lang.Launcher"/>
+            </manifest>
+        </jar>
+        <zip destfile="dist/${ant.project.name}.zip">
+            <zipfileset file="${jar.file}" prefix="${ant.project.name}"/>
+            <zipfileset dir="bin" prefix="${ant.project.name}"/>
+            <zipfileset file="LICENSE.txt" prefix="${ant.project.name}"/>
+            <zipfileset file="sample.zem" prefix="${ant.project.name}"/>
+        </zip>
+    </target>
+    <target name="src-dist" depends="init">
+        <zip destfile="dist/${ant.project.name}_src.zip">
+            <zipfileset dir="bin" prefix="${ant.project.name}/bin"/>
+            <zipfileset dir="src" prefix="${ant.project.name}/src"/>
+            <zipfileset dir="test" prefix="${ant.project.name}/test"/>
+            <zipfileset dir="lib" prefix="${ant.project.name}/lib"/>
+            <zipfileset file="${ant.file}" prefix="${ant.project.name}"/>
+            <zipfileset file="LICENSE.txt" prefix="${ant.project.name}"/>
+            <zipfileset file="sample.zem" prefix="${ant.project.name}"/>
+        </zip>
+    </target>
+    <target name="dist" depends="src-dist, bin-dist"/>
+</project>
