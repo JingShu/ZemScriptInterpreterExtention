@@ -38,6 +38,7 @@ import net.zeminvaders.lang.runtime.LenFunction;
 import net.zeminvaders.lang.runtime.PrintFunction;
 import net.zeminvaders.lang.runtime.PrintLineFunction;
 import net.zeminvaders.lang.runtime.SetAddFunction;
+import net.zeminvaders.lang.runtime.SetRemoveFunction;
 import net.zeminvaders.lang.runtime.ZemObject;
 
 /**
@@ -68,6 +69,10 @@ public class Interpreter {
         
         /* added by Jing Shu and Abdoul Diallo */
         symbolTable.put("set_add", new SetAddFunction());
+        symbolTable.put("set_remove", new SetRemoveFunction());
+        /* end */
+        
+        
     }
 
     /**

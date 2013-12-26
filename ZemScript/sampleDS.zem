@@ -20,5 +20,6 @@ foreach(set as elem){
 }
 
 println("");
-println("The same Set : ");
+set_remove(set, "toto");
+println("The same Set with 'toto' removed : ");
 println(set);
