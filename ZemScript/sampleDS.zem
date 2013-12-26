@@ -3,7 +3,7 @@
  * @author <a href="mailto:mrdiallo.abdoul@gmail.com">Abdoul Diallo</a>
  */
 
-println("Array : ");
+println("==> Array with foreach : ");
 array = [3,2];
 array_push(array, 1);
 array_push(array, "yes");
@@ -12,14 +12,42 @@ foreach(array as elem){
 }
 
 println("");
-println("Set : ");
+println("==> Set with foreach : ");
 set = [|1, 1 ,1 ,1 ,1 ,2 ,2 ,2 ,3 ,3 ,3 ,4 ,"toto", true, true|];
 set_add(set, "element added");
 foreach(set as elem){
 	println(elem);
 }
+println("Total items : " ~ set_size(set));
 
 println("");
 set_remove(set, "toto");
-println("The same Set with 'toto' removed : ");
+println("==> The same Set with 'toto' removed : ");
 println(set);
+println("Total items : " ~ set_size(set));
+
+println("");
+set_remove(set, "titi");
+println("==> The same Set contains 'titi' ? ");
+println(set_contains(set, "titi"));
+
+println("");
+set_remove(set, "titi");
+println("==> The same Set with 'titi' removed : ");
+println(set);
+println("Total items : " ~ set_size(set));
+
+println("");
+println("==> Is the same Set empty ? ");
+println(set_isEmpty(set));
+
+println("");
+println("==> Now I clear the same Set ");
+set_clear(set);
+print("Is the set empty ?   ");
+println(set_isEmpty(set));
+
+println("");
+println("==> Is this set empty : [||] ? ");
+println(set_isEmpty([||]));
+

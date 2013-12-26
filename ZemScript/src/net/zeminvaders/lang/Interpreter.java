@@ -38,7 +38,11 @@ import net.zeminvaders.lang.runtime.LenFunction;
 import net.zeminvaders.lang.runtime.PrintFunction;
 import net.zeminvaders.lang.runtime.PrintLineFunction;
 import net.zeminvaders.lang.runtime.SetAddFunction;
+import net.zeminvaders.lang.runtime.SetClearFunction;
+import net.zeminvaders.lang.runtime.SetContainsFunction;
+import net.zeminvaders.lang.runtime.SetIsEmptyFunction;
 import net.zeminvaders.lang.runtime.SetRemoveFunction;
+import net.zeminvaders.lang.runtime.SetSizeFunction;
 import net.zeminvaders.lang.runtime.ZemObject;
 
 /**
@@ -70,6 +74,10 @@ public class Interpreter {
         /* added by Jing Shu and Abdoul Diallo */
         symbolTable.put("set_add", new SetAddFunction());
         symbolTable.put("set_remove", new SetRemoveFunction());
+        symbolTable.put("set_size", new SetSizeFunction());
+        symbolTable.put("set_contains", new SetContainsFunction());
+        symbolTable.put("set_isEmpty", new SetIsEmptyFunction());
+        symbolTable.put("set_clear", new SetClearFunction());
         /* end */
         
         
