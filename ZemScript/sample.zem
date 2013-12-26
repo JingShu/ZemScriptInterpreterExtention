@@ -18,11 +18,11 @@ condition = isEmail && (len(a_string) > 0) || someOtherBoolean;
 
 // if control flow
 if (a_number < 3) {
-    println("number is less then 3");
+    println("number is less than 3");
 } else if (a_number == 3) {
     println("number is 3");
 } else {
-    println("number is greater then 3");
+    println("number is greater than 3");
 }
 
 // while loop

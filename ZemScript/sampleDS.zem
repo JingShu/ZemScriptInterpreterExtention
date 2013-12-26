@@ -1,0 +1,15 @@
+/*
+ * @author <a href="mailto:js.shujing@gmail.com">Jing Shu</a>
+ * @author <a href="mailto:mrdiallo.abdoul@gmail.com">Abdoul Diallo</a>
+ */
+
+
+array = [3,2];
+array_push(array, 1);
+array_push(array, "yes");
+foreach(array as elem){
+	println(elem);
+}
+
+set = [|1, "toto", true|];
+

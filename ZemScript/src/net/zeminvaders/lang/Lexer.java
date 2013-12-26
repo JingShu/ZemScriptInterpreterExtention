@@ -163,7 +163,20 @@ public class Lexer {
                 return createToken(TokenType.RBRACE, '}');
             }
             case '[': {
-                return createToken(TokenType.LBRACKET, '[');
+            	// code original
+                //return createToken(TokenType.LBRACKET, '[');
+            	
+            	
+            	
+            	/* modified by Jing Shu and Abdoul Diallo */
+            	if (lookAhead(2) == '|') {
+                    return createToken(TokenType.LSET, "[|");
+                } else {
+                    return createToken(TokenType.LBRACKET, '[');
+                }
+            	
+            	
+            	
             }
             case ']': {
                 return createToken(TokenType.RBRACKET, ']');
@@ -176,7 +189,19 @@ public class Lexer {
                 }
             }
             case '|': {
-                return createToken(TokenType.OR, "||");
+            	// code original
+                //return createToken(TokenType.OR, "||");
+            	
+            	
+            	
+            	/* modified by Jing Shu and Abdoul Diallo */
+            	if (lookAhead(2) == ']') {
+                    return createToken(TokenType.RSET, "|]");
+                } else {
+                    return createToken(TokenType.OR, "||");
+                }
+            	
+            	
             }
             case '&': {
                 return createToken(TokenType.AND, "&&");

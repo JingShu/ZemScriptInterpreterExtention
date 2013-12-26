@@ -36,4 +36,8 @@ public enum TokenType {
     NUMBER, STRING_LITERAL, TRUE, FALSE, // Constant types
     IF, ELSE, WHILE, FOR_EACH, AS, // Control structures
     VARIABLE, FUNCTION, RETURN // Other keywords
+    
+    
+    /* added by Jing Shu and Abdoul Diallo */
+    , LSET, RSET    //  [| expr1, expr2 ... |] represents a set
 }

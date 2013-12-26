@@ -21,8 +21,10 @@
  */
 package net.zeminvaders.lang;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.zeminvaders.lang.ast.AddOpNode;
 import net.zeminvaders.lang.ast.AndOpNode;
@@ -40,7 +42,6 @@ import net.zeminvaders.lang.ast.FunctionCallNode;
 import net.zeminvaders.lang.ast.FunctionNode;
 import net.zeminvaders.lang.ast.GreaterEqualOpNode;
 import net.zeminvaders.lang.ast.GreaterThenOpNode;
-import net.zeminvaders.lang.ast.Node;
 import net.zeminvaders.lang.ast.IfNode;
 import net.zeminvaders.lang.ast.LessEqualOpNode;
 import net.zeminvaders.lang.ast.LessThenOpNode;
@@ -48,6 +49,7 @@ import net.zeminvaders.lang.ast.LookupNode;
 import net.zeminvaders.lang.ast.ModOpNode;
 import net.zeminvaders.lang.ast.MultiplyOpNode;
 import net.zeminvaders.lang.ast.NegateOpNode;
+import net.zeminvaders.lang.ast.Node;
 import net.zeminvaders.lang.ast.NotEqualsOpNode;
 import net.zeminvaders.lang.ast.NotOpNode;
 import net.zeminvaders.lang.ast.NumberNode;
@@ -55,6 +57,7 @@ import net.zeminvaders.lang.ast.OrOpNode;
 import net.zeminvaders.lang.ast.PowerOpNode;
 import net.zeminvaders.lang.ast.ReturnNode;
 import net.zeminvaders.lang.ast.RootNode;
+import net.zeminvaders.lang.ast.SetNode;
 import net.zeminvaders.lang.ast.StringNode;
 import net.zeminvaders.lang.ast.SubtractOpNode;
 import net.zeminvaders.lang.ast.TrueNode;
@@ -254,6 +257,21 @@ public class Parser {
             return new NumberNode(t.getPosition(), t.getText());
         }
     }
+    
+    private Node set() {
+        // LSET! (expression (COMMA^ expression)*)? RSET!
+        SourcePosition pos = match(TokenType.LSET).getPosition();
+        Set<Node> elements = new HashSet<Node>();
+        if (lookAhead(1) != TokenType.RSET) {
+            elements.add(expression());
+            while (lookAhead(1) == TokenType.COMMA) {
+                match(TokenType.COMMA);
+                elements.add(expression());
+            }
+        }
+        match(TokenType.RSET);
+        return new SetNode(pos, elements);
+    }
 
     private FunctionNode function() {
         // FUNCTION! LPAREN! parameterList? RPAREN!
@@ -300,6 +318,8 @@ public class Parser {
             return array();
         } else if (type == TokenType.LBRACE) {
             return dictionary();
+        } else if (type == TokenType.LSET) {
+            return set();
         } else {
             // An expression can result in a string, boolean or number
             return stringExpression();
