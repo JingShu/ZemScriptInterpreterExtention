@@ -11,5 +11,12 @@ foreach(array as elem){
 	println(elem);
 }
 
-set = [|1, "toto", true|];
+println("");
 
+set = [|1, 1 ,1,1, 1,2,2,2,3,3,3,4, "toto", true, true|];
+foreach(set as elem){
+	println(elem);
+}
+
+println("");
+println(set);

@@ -29,6 +29,7 @@ import net.zeminvaders.lang.InvalidTypeException;
 import net.zeminvaders.lang.runtime.Dictionary;
 import net.zeminvaders.lang.runtime.ZemArray;
 import net.zeminvaders.lang.runtime.ZemObject;
+import net.zeminvaders.lang.runtime.ZemSet;
 
 /**
  * foreach control structure.
@@ -68,7 +69,26 @@ public class ForeachNode extends Node {
                 ret = loopBody.eval(interpreter);
             }
             return ret;
+        } 
+        
+        
+        
+        
+        /* added by Jing Shu and Abdoul Diallo */
+        else if (onVariable instanceof ZemSet) {
+        	String asVariableName = asNode.toString();
+            for (ZemObject element : (ZemSet) onVariable) {
+                interpreter.setVariable(asVariableName, element);
+                ret = loopBody.eval(interpreter);
+            }
+            return ret;
         }
+        /* end of code added by Jing Shu and Abdoul Diallo */
+        
+        
+        
+        
+        
         throw new InvalidTypeException("foreach expects an array or dictionary.", onVariableNode.getPosition());
     }
 
