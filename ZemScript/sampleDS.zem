@@ -3,7 +3,7 @@
  * @author <a href="mailto:mrdiallo.abdoul@gmail.com">Abdoul Diallo</a>
  */
 
-
+println("Array : ");
 array = [3,2];
 array_push(array, 1);
 array_push(array, "yes");
@@ -12,11 +12,13 @@ foreach(array as elem){
 }
 
 println("");
-
-set = [|1, 1 ,1,1, 1,2,2,2,3,3,3,4, "toto", true, true|];
+println("Set : ");
+set = [|1, 1 ,1 ,1 ,1 ,2 ,2 ,2 ,3 ,3 ,3 ,4 ,"toto", true, true|];
+set_add(set, "element added");
 foreach(set as elem){
 	println(elem);
 }
 
 println("");
+println("The same Set : ");
 println(set);

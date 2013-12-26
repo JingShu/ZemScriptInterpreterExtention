@@ -37,6 +37,7 @@ import net.zeminvaders.lang.runtime.Function;
 import net.zeminvaders.lang.runtime.LenFunction;
 import net.zeminvaders.lang.runtime.PrintFunction;
 import net.zeminvaders.lang.runtime.PrintLineFunction;
+import net.zeminvaders.lang.runtime.SetAddFunction;
 import net.zeminvaders.lang.runtime.ZemObject;
 
 /**
@@ -61,6 +62,12 @@ public class Interpreter {
         symbolTable.put("println", new PrintLineFunction());
         symbolTable.put("len", new LenFunction());
         symbolTable.put("array_push", new ArrayPushFunction());
+        
+        
+        
+        
+        /* added by Jing Shu and Abdoul Diallo */
+        symbolTable.put("set_add", new SetAddFunction());
     }
 
     /**
