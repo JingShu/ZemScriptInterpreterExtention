@@ -31,7 +31,9 @@ import net.zeminvaders.lang.ast.AndOpNode;
 import net.zeminvaders.lang.ast.ArrayNode;
 import net.zeminvaders.lang.ast.AssignNode;
 import net.zeminvaders.lang.ast.BlockNode;
+import net.zeminvaders.lang.ast.CaseNode;
 import net.zeminvaders.lang.ast.ConcatOpNode;
+import net.zeminvaders.lang.ast.DefaultSwitchNode;
 import net.zeminvaders.lang.ast.DictionaryEntryNode;
 import net.zeminvaders.lang.ast.DictionaryNode;
 import net.zeminvaders.lang.ast.DivideOpNode;
@@ -60,6 +62,7 @@ import net.zeminvaders.lang.ast.RootNode;
 import net.zeminvaders.lang.ast.SetNode;
 import net.zeminvaders.lang.ast.StringNode;
 import net.zeminvaders.lang.ast.SubtractOpNode;
+import net.zeminvaders.lang.ast.SwitchNode;
 import net.zeminvaders.lang.ast.TrueNode;
 import net.zeminvaders.lang.ast.VariableNode;
 import net.zeminvaders.lang.ast.WhileNode;
@@ -142,7 +145,19 @@ public class Parser {
             return _while();
         } else if (type == TokenType.FOR_EACH) {
             return foreach();
-        } else {
+        } 
+        /* added by Jing Shu and Abdoul Diallo */
+        else if(type == TokenType.SWITCH){
+        	return _switch();
+        }
+        else if(type == TokenType.CASE){
+        	return _case();
+        }
+        else if(type == TokenType.DEFAULT){
+        	return _default();
+        } 
+        /* end added */
+        else {
             // We only get here if there is token from the lexer
             // that is not handled by parser yet.
             throw new ParserException("Unknown token type " + type);
@@ -521,7 +536,48 @@ public class Parser {
         }
         return stringNode;
     }
-
+    
+    /* added by Jing Shu and Abdoul Diallo */
+    private Node _switch(){
+        SourcePosition pos = match(TokenType.SWITCH).getPosition();
+        match(TokenType.LPAREN);
+        Node var = variable();       
+        match(TokenType.RPAREN);        
+        Node block = block();
+        //return new SwitchNode(pos, var, new BlockNode(lbrace.getPosition(),switchBlock));
+        return new SwitchNode(pos, var, block);
+    	
+    }
+    
+    private Node _case(){
+    	SourcePosition pos = match(TokenType.CASE).getPosition();
+    	Node value = expression();
+    	
+        Token colon = match(TokenType.COLON);
+        List<Node> block = new LinkedList<Node>();
+        while (lookAhead(1) != TokenType.BREAK) {
+            block.add(statement());
+        }
+        match(TokenType.BREAK);
+        match(TokenType.END_STATEMENT);
+        Node caseBlock = new BlockNode(colon.getPosition(), block);
+        
+        return new CaseNode(pos, value, caseBlock);
+    }
+    
+    private Node _default(){
+    	SourcePosition pos = match(TokenType.DEFAULT).getPosition();    	
+        Token colon = match(TokenType.COLON);
+        List<Node> block = new LinkedList<Node>();
+        while (lookAhead(1) != TokenType.RBRACE) {
+            block.add(statement());
+        }
+        Node defaultBlock = new BlockNode(colon.getPosition(), block);
+        
+        return new DefaultSwitchNode(pos, defaultBlock);
+    }
+    /* end added */
+    
     private Node string() {
         // STRING_LITERAL | boolExpr
         if (lookAhead(1) == TokenType.STRING_LITERAL) {
