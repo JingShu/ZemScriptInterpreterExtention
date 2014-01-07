@@ -1,5 +1,8 @@
 ZemScriptInterpreterExtention
 =============================
+
+Developers : Abdoul Diallo <mrdiallo.abdoul@gmail.com> , Jing Shu <js.shujing@gmail.com>
+
 Steps to take in order to test our project : 
 
 1. open the file "sampleDS.zem", this is a mini script to interpret
