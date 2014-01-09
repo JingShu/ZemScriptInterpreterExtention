@@ -151,7 +151,7 @@ public class Lexer {
                 return createToken(TokenType.COLON, ':');
             }
             case '(': {
-                return createToken(TokenType.LPAREN, '(');
+                return createToken(TokenType.LPAREN, '(');  
             }
             case ')': {
                 return createToken(TokenType.RPAREN, ')');
@@ -168,7 +168,7 @@ public class Lexer {
             	
             	
             	
-            	/* modified by Jing Shu and Abdoul Diallo */
+            	/* added by Jing Shu and Abdoul Diallo */
             	if (lookAhead(2) == '|') {
                     return createToken(TokenType.LSET, "[|");
                 } else {
@@ -194,7 +194,7 @@ public class Lexer {
             	
             	
             	
-            	/* modified by Jing Shu and Abdoul Diallo */
+            	/* added by Jing Shu and Abdoul Diallo */
             	if (lookAhead(2) == ']') {
                     return createToken(TokenType.RSET, "|]");
                 } else {

@@ -20,6 +20,25 @@ public class ZemSet extends ZemObject implements Iterable<ZemObject> {
 		return elements.size();
 	}
 	
+	public ZemObject get(ZemObject index){
+		int ind = -1;
+		if(! (index instanceof ZemNumber)){
+			return null;
+		}
+		ind = ((ZemNumber)index).intValue();
+		if(ind < 0 || ind >= elements.size()){
+			return null;
+		}
+		Iterator<ZemObject> iter = elements.iterator();
+		while(ind > 0){
+			if(iter.hasNext()){
+				iter.next();
+			}
+			ind--;
+		}
+		return iter.next();
+	}
+	
 	public void add(ZemObject element){
 		elements.add(element);
 	}

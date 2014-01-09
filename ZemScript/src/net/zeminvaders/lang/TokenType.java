@@ -39,5 +39,5 @@ public enum TokenType {
     
     
     /* added by Jing Shu and Abdoul Diallo */
-    , LSET, RSET,SWITCH, CASE, BREAK,DEFAULT    //  [| expr1, expr2 ... |] represents a set
+    , LSET, RSET,SWITCH, CASE, BREAK,DEFAULT, LAMBDA    //  [| expr1, expr2 ... |] represents a set
 }

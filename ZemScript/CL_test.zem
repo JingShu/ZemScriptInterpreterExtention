@@ -1,0 +1,17 @@
+a_number = 3;
+b_number = 0;
+
+println(a_number);
+
+switch(a_number){
+    case 4 : 
+        println("ca marche");
+    break;
+    default:
+        println("Aucun choix");
+        println("pk");
+        println("je sais pas");
+        println("salut");
+        b_number = 5;
+}
+println(b_number);
