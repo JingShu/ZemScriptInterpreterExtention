@@ -20,8 +20,9 @@ loop = function() {
 		if(cpt > 10){
 			println("Finished !");
 		} else {
-			println("Continue ...");
-    		set_remove(set, 1);
+			print("Continue ... Step ");
+			println(cpt);
+    		set_remove(set, 6);
     		set_add(set, 1);
     		callcc;
     	}
