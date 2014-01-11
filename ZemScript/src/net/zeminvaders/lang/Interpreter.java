@@ -80,6 +80,7 @@ public class Interpreter {
         symbolTable.put("set_contains", new SetContainsFunction());
         symbolTable.put("set_isEmpty", new SetIsEmptyFunction());
         symbolTable.put("set_clear", new SetClearFunction());
+        symbolTable.put("callcc", null);
         /* end */
         
         

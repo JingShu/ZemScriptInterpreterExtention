@@ -14,20 +14,24 @@ first = function(a_set) {
 cpt = 0;
 
 loop = function() {
-	c = callcc;
-	first(set);
-    print(" ");
-	cpt = cpt + 1;
-	if(cpt > 10){
-		return 0;
-	} else {
-    	set_remove(1);
-    	set_add(1);
-    	c;
-    }
+	call_cc {
+		first(set);
+		cpt = cpt + 1;
+		if(cpt > 10){
+			println("Finished !");
+		} else {
+			println("Continue ...");
+    		set_remove(set, 1);
+    		set_add(set, 1);
+    		callcc;
+    	}
+    };
 };
 
+loop();
 
+
+/*
 (define (loop)
    (call/cc (lambda (k) (set! cont k)))
    (display-first lst)
@@ -38,4 +42,4 @@ loop = function() {
    )
 )
 
-(loop)
+(loop)*/

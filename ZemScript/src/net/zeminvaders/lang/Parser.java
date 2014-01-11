@@ -31,6 +31,8 @@ import net.zeminvaders.lang.ast.AndOpNode;
 import net.zeminvaders.lang.ast.ArrayNode;
 import net.zeminvaders.lang.ast.AssignNode;
 import net.zeminvaders.lang.ast.BlockNode;
+import net.zeminvaders.lang.ast.CallCCNode;
+import net.zeminvaders.lang.ast.Call_CCNode;
 import net.zeminvaders.lang.ast.CaseNode;
 import net.zeminvaders.lang.ast.ConcatOpNode;
 import net.zeminvaders.lang.ast.DefaultSwitchNode;
@@ -75,7 +77,17 @@ import net.zeminvaders.lang.ast.WhileNode;
 public class Parser {
     // Look ahead buffer for reading tokens from the lexer
     TokenBuffer lookAheadBuffer;
-
+    
+    
+    /* added by Jing Shu and Abdoul Diallo */
+    private static Node call_ccNode;
+    
+    public static Node getCall_ccNode(){
+    	return call_ccNode;
+    }
+    /* end */
+    
+    
     public Parser(Lexer lexer) {
         lookAheadBuffer = new TokenBuffer(lexer, 2);
     }
@@ -123,6 +135,8 @@ public class Parser {
         // | VARIABLE! ASSIGN! expression END_STATEMENT
         // | RETURN expression END_STATEMENT
         // | IF | WHILE | FOR_EACH
+    	// | CALL_CC END_STATEMENT
+    	// | CALLCC END_STATEMENT
         TokenType type = lookAhead(1);
         if (type == TokenType.VARIABLE && lookAhead(2) == TokenType.LPAREN) {
             Node funcCall = functionCall();
@@ -146,6 +160,9 @@ public class Parser {
         } else if (type == TokenType.FOR_EACH) {
             return foreach();
         } 
+        
+        
+        
         /* added by Jing Shu and Abdoul Diallo */
         else if(type == TokenType.SWITCH){
         	return _switch();
@@ -156,7 +173,24 @@ public class Parser {
         else if(type == TokenType.DEFAULT){
         	return _default();
         } 
-        /* end added */
+        // the fonction call/cc
+        else if (type == TokenType.CALL_CC) {
+            call_ccNode =  call_cc();
+            match(TokenType.END_STATEMENT);
+            return call_ccNode;
+        } 
+        // keyword to call a continuation
+        else if (type == TokenType.CALLCC) {
+            Node callcc =  callcc();
+            match(TokenType.END_STATEMENT);
+            return callcc;
+        } 
+        /* end */
+        
+        
+        
+        
+        
         else {
             // We only get here if there is token from the lexer
             // that is not handled by parser yet.
@@ -273,6 +307,8 @@ public class Parser {
         }
     }
     
+    
+    /* method added by Jing Shu and Abdoul Diallo */
     private Node set() {
         // LSET! (expression (COMMA^ expression)*)? RSET!
         SourcePosition pos = match(TokenType.LSET).getPosition();
@@ -286,6 +322,19 @@ public class Parser {
         }
         match(TokenType.RSET);
         return new SetNode(pos, elements);
+    }
+    
+    /* method added by Jing Shu and Abdoul Diallo */
+    private Node call_cc() {
+        SourcePosition pos = match(TokenType.CALL_CC).getPosition();
+        BlockNode continuation = block();
+        return new Call_CCNode(pos, continuation);
+    }
+    
+    /* method added by Jing Shu and Abdoul Diallo */
+    private Node callcc() {
+        SourcePosition pos = match(TokenType.CALLCC).getPosition();
+        return new CallCCNode(pos);
     }
 
     private FunctionNode function() {
@@ -333,9 +382,21 @@ public class Parser {
             return array();
         } else if (type == TokenType.LBRACE) {
             return dictionary();
-        } else if (type == TokenType.LSET) {
+        } 
+        
+        
+        /* added bu Jing Shu and Abdoul Diallo */
+        else if (type == TokenType.LSET) {
             return set();
-        } else {
+        } 
+        else if (type == TokenType.CALL_CC) {
+            return call_cc();
+        } 
+        /* end */
+        
+        
+        
+        else {
             // An expression can result in a string, boolean or number
             return stringExpression();
         }

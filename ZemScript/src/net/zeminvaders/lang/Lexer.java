@@ -329,6 +329,9 @@ public class Lexer {
         } else if (word.equals("return")) {
             return new Token(pos, TokenType.RETURN, word);
         } 
+        
+        
+        
         /* added by Jing Shu and Abdoul Diallo */
         else if (word.equals("switch")) {
             return new Token(pos, TokenType.SWITCH, word);
@@ -338,8 +341,16 @@ public class Lexer {
             return new Token(pos, TokenType.BREAK, word);
         } else if (word.equals("default")) {
             return new Token(pos, TokenType.DEFAULT, word);
+        } else if (word.equals("call_cc")) {
+            return new Token(pos, TokenType.CALL_CC, word);
+        } else if (word.equals("callcc")) {
+            return new Token(pos, TokenType.CALLCC, word);
         } 
         /* end added */
+        
+        
+        
+        
         else {
             return new Token(pos, TokenType.VARIABLE, word);
         }
