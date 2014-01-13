@@ -3,6 +3,8 @@ ZemScriptInterpreterExtention
 
 Developers : Abdoul Diallo <mrdiallo.abdoul@gmail.com> , Jing Shu <js.shujing@gmail.com>
 
+Original code source : https://code.google.com/p/zemscript/
+
 Steps to take in order to test our project : 
 
   To test the primitive "Set" and the control structure "switch" : 
