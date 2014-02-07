@@ -4,8 +4,7 @@
 	<property name="src.dir"     value="src"/>
 	<property name="bin.dir"   	 value="bin"/>
 	<property name="jar.dir" 	 value="."/>
-	<property name="main-callcc"  value="test.TestCallCC"/>
-	<property name="main-Ds"      value="test.TestDS"/>
+	<property name="main-class"  value="main.ZemscriptMain"/>
 	<property name="junit.lib" value="lib/junit-4.6.jar"/>
 	
 	<target name="clean">
@@ -29,21 +28,14 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="${jar.dir}/ZemScripCall.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="${jar.dir}/Zemscript.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="${main-callcc}"/>
+				<attribute name="Main-Class" value="${main-class}"/>
     			<attribute name="Class-Path" value="."/>
 			</manifest>
     		<fileset dir="${bin.dir}"/>
 		</jar>
-		<jar destfile="${jar.dir}/ZemScripDS.jar" filesetmanifest="mergewithoutmain">
-			<manifest>
-				<attribute name="Main-Class" value="${main-Ds}"/>
-		    	<attribute name="Class-Path" value="."/>
-			</manifest>
-		    <fileset dir="${bin.dir}"/>
-		</jar>
-		<echo message="Creation du fichier Jar terminer"/>
+		<echo message="Creation du fichier Jar terminee"/>
 	</target>
 </project>
 	<!--<project basedir="." default="test" name="ZemScript">
