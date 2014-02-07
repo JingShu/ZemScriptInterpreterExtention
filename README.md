@@ -1,7 +1,7 @@
 ZemScriptInterpreterExtention
 =============================
 
-Developers : Abdoul Diallo <mrdiallo.abdoul@gmail.com> , Jing Shu <js.shujing@gmail.com>
+Developers : Abdoul Diallo <mrdiallo.abdoul@gmail.com> , Jing Shu (sjpanda) <js.shujing@gmail.com>
 
 Original code source : https://code.google.com/p/zemscript/
 
@@ -9,8 +9,8 @@ Original code source : https://code.google.com/p/zemscript/
 Steps to take in order to test our project in terminal : 
 
     1. Open your consol on the root folder of the project
-    2. Type "ant" to build the project and you will have 2 jar files created : ZemScripCall.jar and ZemScripDS.jar
-    3. Type "java -jar ZemScripDS.jar" to test the primitive "Set" and the control structure "switch", or type "java -jar ZemScripCall.jar" to test the control structure "call/cc"
+    2. Type "ant" to build the project and you will have the jar file "Zemscript.jar" created
+    3. Type "java -jar Zemscript.jar <Path to a script file>" to interpret a zem script
 
 
 
