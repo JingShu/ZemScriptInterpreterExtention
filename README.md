@@ -5,7 +5,16 @@ Developers : Abdoul Diallo <mrdiallo.abdoul@gmail.com> , Jing Shu <js.shujing@gm
 
 Original code source : https://code.google.com/p/zemscript/
 
-Steps to take in order to test our project : 
+
+Steps to take in order to test our project in terminal : 
+
+    1. Open your consol on the root folder of the project
+    2. Type "ant" to build the project and you will have 2 jar files created : ZemScripCall.jar and ZemScripDS.jar
+    3. Type "java -jar ZemScripDS.jar" to test the primitive "Set" and the control structure "switch", or type "java -jar ZemScripCall.jar" to test the control structure "call/cc"
+
+
+
+Steps to take in order to test our project with Eclipse : 
 
   To test the primitive "Set" and the control structure "switch" : 
 
