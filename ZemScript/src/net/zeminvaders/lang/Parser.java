@@ -21,9 +21,11 @@
  */
 package net.zeminvaders.lang;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.zeminvaders.lang.ast.AddOpNode;
@@ -47,6 +49,7 @@ import net.zeminvaders.lang.ast.FunctionNode;
 import net.zeminvaders.lang.ast.GreaterEqualOpNode;
 import net.zeminvaders.lang.ast.GreaterThenOpNode;
 import net.zeminvaders.lang.ast.IfNode;
+import net.zeminvaders.lang.ast.LambdaNode;
 import net.zeminvaders.lang.ast.LessEqualOpNode;
 import net.zeminvaders.lang.ast.LessThenOpNode;
 import net.zeminvaders.lang.ast.LookupNode;
@@ -68,6 +71,7 @@ import net.zeminvaders.lang.ast.SwitchNode;
 import net.zeminvaders.lang.ast.TrueNode;
 import net.zeminvaders.lang.ast.VariableNode;
 import net.zeminvaders.lang.ast.WhileNode;
+import net.zeminvaders.lang.runtime.ZemObject;
 
 /**
  * Check the syntax and convert the Token stream into Abstract Syntax Tree.
@@ -137,6 +141,7 @@ public class Parser {
         // | IF | WHILE | FOR_EACH
     	// | CALL_CC END_STATEMENT
     	// | CALLCC END_STATEMENT
+    	// | LAMBDA
         TokenType type = lookAhead(1);
         if (type == TokenType.VARIABLE && lookAhead(2) == TokenType.LPAREN) {
             Node funcCall = functionCall();
@@ -172,7 +177,12 @@ public class Parser {
         }
         else if(type == TokenType.DEFAULT){
         	return _default();
-        } 
+        }
+        else if(type == TokenType.LAMBDA){
+        	Node lambdaNode = lambda();
+        	match(TokenType.END_STATEMENT);
+        	return lambdaNode;
+        }
         // the fonction call/cc
         else if (type == TokenType.CALL_CC) {
             call_ccNode =  call_cc();
@@ -322,6 +332,19 @@ public class Parser {
         }
         match(TokenType.RSET);
         return new SetNode(pos, elements);
+    }
+    
+    /* method added by Jing Shu */
+    private Node lambda() {
+        SourcePosition pos = match(TokenType.LAMBDA).getPosition();
+        match(TokenType.LPAREN);
+        List<Node> paramList = FunctionNode.NO_PARAMETERS;
+        if (lookAhead(1) != TokenType.RPAREN) {
+            paramList = parameterList();
+        }
+        match(TokenType.RPAREN);
+        Node body = block();
+        return new LambdaNode(pos, paramList, body);
     }
     
     /* method added by Jing Shu and Abdoul Diallo */

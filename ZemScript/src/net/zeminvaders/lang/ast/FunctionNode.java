@@ -38,8 +38,9 @@ import net.zeminvaders.lang.runtime.ZemObject;
 public class FunctionNode extends Node {
     final static public List<Node> NO_PARAMETERS = new ArrayList<Node>(0);
 
-    private List<Node> parameters;
-    private Node body;
+    /* private -> protected : modified by Jing Shu */
+    protected List<Node> parameters;
+    protected Node body;
 
     public FunctionNode(SourcePosition pos, List<Node> parameters, Node body) {
         super(pos);

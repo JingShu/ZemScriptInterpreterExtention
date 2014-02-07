@@ -85,6 +85,17 @@ public class Interpreter {
         
         
     }
+    
+    /*
+     * Method added by Jing
+     * 
+     * Get the current symbolTable.
+     *
+     */
+    public Map<String, ZemObject> getSymbolTable() {
+        return symbolTable;
+    }
+    
 
     /**
      * Get the current value of a variable.

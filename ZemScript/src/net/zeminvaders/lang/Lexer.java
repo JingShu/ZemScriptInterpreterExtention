@@ -341,6 +341,8 @@ public class Lexer {
             return new Token(pos, TokenType.BREAK, word);
         } else if (word.equals("default")) {
             return new Token(pos, TokenType.DEFAULT, word);
+        } else if (word.equals("lambda")) {
+            return new Token(pos, TokenType.LAMBDA, word);
         } else if (word.equals("call_cc")) {
             return new Token(pos, TokenType.CALL_CC, word);
         } else if (word.equals("callcc")) {
