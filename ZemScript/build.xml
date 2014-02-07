@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="test" name="ZemScript">
+<project default="jar" name="Create Runnable Jar for Project cl">
+
+	<property name="src.dir"     value="src"/>
+	<property name="bin.dir"   	 value="bin"/>
+	<property name="jar.dir" 	 value="."/>
+	<property name="main-callcc"  value="test.TestCallCC"/>
+	<property name="main-Ds"      value="test.TestDS"/>
+	<property name="junit.lib" value="lib/junit-4.6.jar"/>
+	
+	<target name="clean">
+		<delete dir="${bin.dir}"/>
+		<tstamp/>
+		<echo message="Nous sommes le ${TODAY}" />
+	</target>
+	    	
+	<target name="compile" depends="clean">
+		<mkdir dir="${bin.dir}"/>
+		<javac srcdir="${src.dir}" 
+			destdir="${bin.dir}" 
+			includeantruntime="false" 
+			debug="on"
+			optimize="off"
+			deprecation="on">
+			 <classpath>
+			     <pathelement location="${junit.lib}"/>
+			 </classpath>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar destfile="${jar.dir}/ZemScripCall.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="${main-callcc}"/>
+    			<attribute name="Class-Path" value="."/>
+			</manifest>
+    		<fileset dir="${bin.dir}"/>
+		</jar>
+		<jar destfile="${jar.dir}/ZemScripDS.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="${main-Ds}"/>
+		    	<attribute name="Class-Path" value="."/>
+			</manifest>
+		    <fileset dir="${bin.dir}"/>
+		</jar>
+		<echo message="Creation du fichier Jar terminer"/>
+	</target>
+</project>
+	<!--<project basedir="." default="test" name="ZemScript">
+
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
@@ -71,4 +119,7 @@
         </zip>
     </target>
     <target name="dist" depends="src-dist, bin-dist"/>
-</project>
+    
+    
+
+</project>    -->
