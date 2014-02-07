@@ -44,6 +44,7 @@ import net.zeminvaders.lang.runtime.SetGetFunction;
 import net.zeminvaders.lang.runtime.SetIsEmptyFunction;
 import net.zeminvaders.lang.runtime.SetRemoveFunction;
 import net.zeminvaders.lang.runtime.SetSizeFunction;
+import net.zeminvaders.lang.runtime.UserFunction;
 import net.zeminvaders.lang.runtime.ZemObject;
 
 /**
@@ -94,6 +95,16 @@ public class Interpreter {
      */
     public Map<String, ZemObject> getSymbolTable() {
         return symbolTable;
+    }
+    
+    /*
+     * Method added by Jing
+     * 
+     * Set the value of the current symbolTable.
+     *
+     */
+    public void setSymbolTable(Map<String, ZemObject> symbolTable) {
+        this.symbolTable = symbolTable;
     }
     
 
@@ -174,6 +185,42 @@ public class Interpreter {
 
         return ret;
     }
+    
+    /* Added by Jing */
+    public ZemObject callFunction(UserFunction function, List<ZemObject> args, SourcePosition pos) {
+        // Save the symbolTable
+        Map<String, ZemObject> savedSymbolTable =
+            new HashMap<String, ZemObject>(symbolTable);
+        // Setup symbolTable for function
+        int noMissingArgs = 0;
+        int noRequiredArgs = 0;
+        for (int paramIndex = 0;
+                paramIndex < function.getParameterCount(); paramIndex++) {
+            String parameterName = function.getParameterName(paramIndex);
+            ZemObject value = function.getDefaultValue(paramIndex);
+            if (value == null) {
+                noRequiredArgs++;
+            }
+            if (paramIndex < args.size()) {
+                // Value provided in function call overrides the default value
+                value = args.get(paramIndex);
+            }
+            if (value == null) {
+                noMissingArgs++;
+            }
+            setVariable(parameterName, value);
+        }
+        if (noMissingArgs > 0) {
+            throw new TooFewArgumentsException("anonymous function", noRequiredArgs,
+                    args.size(), pos);
+        }
+        ZemObject ret = function.eval(this, pos);
+        // Restore symbolTable
+        symbolTable = savedSymbolTable;
+
+        return ret;
+    }
+    
 
     /**
      * Evaluate script

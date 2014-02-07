@@ -24,6 +24,10 @@ public class LambdaNode extends FunctionNode {
 		super(pos, parameters, body);
 		this.env = new HashMap<String, ZemObject>();
 	}
+	
+	public Map<String, ZemObject> getEnv(){
+		return env;
+	}
 
 	public void setEnv(Map<String, ZemObject> env){
 		this.env = env;
@@ -31,6 +35,17 @@ public class LambdaNode extends FunctionNode {
 
 	@Override
 	public ZemObject eval(Interpreter interpreter) {
+		
+		
+		///////////////////////////////////////////////////////////////////
+		// copy the current environment (bindings of variable and value) //
+		///////////////////////////////////////////////////////////////////
+		env = new HashMap<String, ZemObject>(interpreter.getSymbolTable());	
+		Interpreter localInterpreter = new Interpreter();
+		localInterpreter.setSymbolTable(env);
+		
+		
+
 		List<Parameter> params = new ArrayList<Parameter>(parameters.size());
 		for (Node node : parameters) {
 			// TODO clean up getting parameters
@@ -41,18 +56,17 @@ public class LambdaNode extends FunctionNode {
 				parameterValue = null;
 			} else if (node instanceof AssignNode) {
 				parameterName = ((VariableNode) ((AssignNode) node).getLeft()).getName();
-				parameterValue = ((AssignNode) node).getRight().eval(interpreter);
+				parameterValue = ((AssignNode) node).getRight().eval(localInterpreter);
 			} else {
 				// This error should not occur
-				throw new RuntimeException("Invalid function");
+				throw new RuntimeException("Invalid anonymous function");
 			}
 			Parameter param = new Parameter(parameterName, parameterValue);
 			params.add(param);
 		}
 
-		// copy the current environment (bindings of variable and value)
-		env = new HashMap<String, ZemObject>(interpreter.getSymbolTable());	
-
+		env = new HashMap<String, ZemObject>(localInterpreter.getSymbolTable());	
+		
 		return new UserFunction(params, body);
 	}
 

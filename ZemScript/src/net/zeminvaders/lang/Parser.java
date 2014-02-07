@@ -49,6 +49,7 @@ import net.zeminvaders.lang.ast.FunctionNode;
 import net.zeminvaders.lang.ast.GreaterEqualOpNode;
 import net.zeminvaders.lang.ast.GreaterThenOpNode;
 import net.zeminvaders.lang.ast.IfNode;
+import net.zeminvaders.lang.ast.LambdaCallNode;
 import net.zeminvaders.lang.ast.LambdaNode;
 import net.zeminvaders.lang.ast.LessEqualOpNode;
 import net.zeminvaders.lang.ast.LessThenOpNode;
@@ -141,7 +142,7 @@ public class Parser {
         // | IF | WHILE | FOR_EACH
     	// | CALL_CC END_STATEMENT
     	// | CALLCC END_STATEMENT
-    	// | LAMBDA
+    	// | LAMBDA 
         TokenType type = lookAhead(1);
         if (type == TokenType.VARIABLE && lookAhead(2) == TokenType.LPAREN) {
             Node funcCall = functionCall();
@@ -179,9 +180,20 @@ public class Parser {
         	return _default();
         }
         else if(type == TokenType.LAMBDA){
-        	Node lambdaNode = lambda();
-        	match(TokenType.END_STATEMENT);
-        	return lambdaNode;
+        	Token lambdaToken = match(TokenType.LAMBDA);
+        	Node lambdaNode = lambda(lambdaToken);
+        	TokenType next = lookAhead(1);
+        	if(next == TokenType.END_STATEMENT){
+        		match(TokenType.END_STATEMENT);
+        		return lambdaNode;
+        	}
+        	if(next == TokenType.LPAREN){
+        		Node lambdaCallNode = lambdaCall(lambdaToken, (LambdaNode)lambdaNode);
+        		match(TokenType.END_STATEMENT);
+        		return lambdaCallNode;
+        		
+        	}
+        	throw new ParserException("Unknown token type " + type);
         }
         // the fonction call/cc
         else if (type == TokenType.CALL_CC) {
@@ -335,8 +347,8 @@ public class Parser {
     }
     
     /* method added by Jing Shu */
-    private Node lambda() {
-        SourcePosition pos = match(TokenType.LAMBDA).getPosition();
+    private Node lambda(Token lambdaToken) {
+        SourcePosition pos = lambdaToken.getPosition();
         match(TokenType.LPAREN);
         List<Node> paramList = FunctionNode.NO_PARAMETERS;
         if (lookAhead(1) != TokenType.RPAREN) {
@@ -345,6 +357,17 @@ public class Parser {
         match(TokenType.RPAREN);
         Node body = block();
         return new LambdaNode(pos, paramList, body);
+    }
+    
+    /* method added by Jing Shu */
+    private Node lambdaCall(Token lambdaToken, LambdaNode lambdaNode) {
+        match(TokenType.LPAREN);
+        List<Node> arguments = FunctionCallNode.NO_ARGUMENTS;
+        if (lookAhead(1) != TokenType.RPAREN) {
+            arguments = argumentList();
+        }
+        match(TokenType.RPAREN);
+        return new LambdaCallNode(lambdaToken.getPosition(), lambdaNode, arguments);
     }
     
     /* method added by Jing Shu and Abdoul Diallo */
