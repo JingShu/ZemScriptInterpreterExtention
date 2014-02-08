@@ -1,8 +1,12 @@
 package net.zeminvaders.lang.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.zeminvaders.lang.Interpreter;
 import net.zeminvaders.lang.Parser;
 import net.zeminvaders.lang.SourcePosition;
+import net.zeminvaders.lang.runtime.ZemNumber;
 import net.zeminvaders.lang.runtime.ZemObject;
 
 /**
@@ -11,15 +15,21 @@ import net.zeminvaders.lang.runtime.ZemObject;
  * @author <a href="mailto:js.shujing@gmail.com">Jing Shu</a>
  * @author <a href="mailto:mrdiallo.abdoul@gmail.com">Abdoul Diallo</a>
  */
-public class CallCCNode extends Node {
+public class CallCCNode extends FunctionCallNode {
 
-	public CallCCNode(SourcePosition position) {
-		super(position);
+	public CallCCNode(SourcePosition pos,
+			List<Node> arguments) {
+		super(pos, "callcc", arguments);
 	}
 
 	@Override
-	public ZemObject eval(Interpreter interpreter) {
-		return Parser.getCall_ccNode().eval(interpreter);
-	}
-
+    public ZemObject eval(Interpreter interpreter) {
+        // Evaluate the arguments
+        List<ZemObject> args = new ArrayList<ZemObject>(arguments.size());
+        for (Node node : arguments) {
+            args.add(node.eval(interpreter));
+        }
+        return new ZemNumber("1");
+        //return interpreter.callFunction(functionName, args, getPosition());
+    }
 }
