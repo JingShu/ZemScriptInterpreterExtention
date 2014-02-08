@@ -24,12 +24,13 @@ public class CallCCNode extends FunctionCallNode {
 
 	@Override
     public ZemObject eval(Interpreter interpreter) {
-        // Evaluate the arguments
-        List<ZemObject> args = new ArrayList<ZemObject>(arguments.size());
-        for (Node node : arguments) {
-            args.add(node.eval(interpreter));
+        if(arguments.size() != 1){
+        	return null;
         }
-        return new ZemNumber("1");
-        //return interpreter.callFunction(functionName, args, getPosition());
+        Node continuation = arguments.get(0);
+        if(! (continuation instanceof FunctionNode)){
+        	return null;
+        }
+        return null;
     }
 }
