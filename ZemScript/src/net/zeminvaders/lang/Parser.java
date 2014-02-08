@@ -439,6 +439,10 @@ public class Parser {
 		else if (type == TokenType.CALL_CC) {
 			return call_cc();
 		} 
+		else if (type == TokenType.LAMBDA) {
+			Token lambdaToken = match(TokenType.LAMBDA);
+			return lambda(lambdaToken);
+		} 
 		/* end */
 
 
