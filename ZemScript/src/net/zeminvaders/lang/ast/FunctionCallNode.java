@@ -36,8 +36,9 @@ import net.zeminvaders.lang.runtime.ZemObject;
 public class FunctionCallNode extends Node {
     final static public List<Node> NO_ARGUMENTS = new ArrayList<Node>(0);
 
-    private String functionName;
-    private List<Node> arguments;
+    /* private -> protected : modified by Jing */
+    protected String functionName;
+    protected List<Node> arguments;
 
     public FunctionCallNode(SourcePosition pos, String functionName, List<Node> arguments) {
         super(pos);

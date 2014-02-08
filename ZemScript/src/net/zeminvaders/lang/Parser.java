@@ -34,7 +34,6 @@ import net.zeminvaders.lang.ast.ArrayNode;
 import net.zeminvaders.lang.ast.AssignNode;
 import net.zeminvaders.lang.ast.BlockNode;
 import net.zeminvaders.lang.ast.CallCCNode;
-import net.zeminvaders.lang.ast.Call_CCNode;
 import net.zeminvaders.lang.ast.CaseNode;
 import net.zeminvaders.lang.ast.ConcatOpNode;
 import net.zeminvaders.lang.ast.DefaultSwitchNode;
@@ -196,13 +195,6 @@ public class Parser {
 			}
 			throw new ParserException("Unknown token type " + type);
 		}
-		// the fonction call/cc
-		else if (type == TokenType.CALL_CC) {
-			call_ccNode =  call_cc();
-			match(TokenType.END_STATEMENT);
-			return call_ccNode;
-		} 
-		// keyword to call a continuation
 		else if (type == TokenType.CALLCC) {
 			Node callcc =  callcc();
 			match(TokenType.END_STATEMENT);
@@ -371,17 +363,16 @@ public class Parser {
 		return new LambdaCallNode(lambdaToken.getPosition(), lambdaNode, arguments);
 	}
 
-	/* method added by Jing Shu and Abdoul Diallo */
-	private Node call_cc() {
-		SourcePosition pos = match(TokenType.CALL_CC).getPosition();
-		BlockNode continuation = block();
-		return new Call_CCNode(pos, continuation);
-	}
-
-	/* method added by Jing Shu and Abdoul Diallo */
+	/* method added by Jing Shu */
 	private Node callcc() {
 		SourcePosition pos = match(TokenType.CALLCC).getPosition();
-		return new CallCCNode(pos);
+		match(TokenType.LPAREN);
+		List<Node> paramList = FunctionNode.NO_PARAMETERS;
+		if (lookAhead(1) != TokenType.RPAREN) {
+			paramList = parameterList();
+		}
+		match(TokenType.RPAREN);
+		return new CallCCNode(pos, paramList);
 	}
 
 	private FunctionNode function() {
@@ -411,14 +402,22 @@ public class Parser {
 
 	private Node parameter() {
 		// variable (ASSIGN^ expression)?
-		Token t = match(TokenType.VARIABLE);
-		VariableNode var = new VariableNode(t.getPosition(), t.getText());
-		if (lookAhead(1) == TokenType.ASSIGN) {
-			SourcePosition pos = match(TokenType.ASSIGN).getPosition();
-			Node e = expression();
-			return new AssignNode(pos, var, e);
+		TokenType type = lookAhead(1);
+		if(type == TokenType.VARIABLE){
+			Token t = match(TokenType.VARIABLE);
+			VariableNode var = new VariableNode(t.getPosition(), t.getText());
+			if (lookAhead(1) == TokenType.ASSIGN) {
+				SourcePosition pos = match(TokenType.ASSIGN).getPosition();
+				Node e = expression();
+				return new AssignNode(pos, var, e);
+			}
+			return var;
 		}
-		return var;
+		if(type == TokenType.LAMBDA){
+			Token lambdaToken = match(TokenType.LAMBDA);
+			return lambda(lambdaToken);
+		}
+		throw new ParserException("Unknown token type " + type);
 	}
 
 	private Node expression() {
@@ -436,8 +435,8 @@ public class Parser {
 		else if (type == TokenType.LSET) {
 			return set();
 		} 
-		else if (type == TokenType.CALL_CC) {
-			return call_cc();
+		else if (type == TokenType.CALLCC) {
+			return callcc();
 		} 
 		else if (type == TokenType.LAMBDA) {
 			Token lambdaToken = match(TokenType.LAMBDA);

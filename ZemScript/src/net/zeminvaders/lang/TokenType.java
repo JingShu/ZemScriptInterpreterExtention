@@ -39,5 +39,5 @@ public enum TokenType {
     
     
     /* added by Jing Shu and Abdoul Diallo */
-    , LSET, RSET, SWITCH, CASE, BREAK, DEFAULT, LAMBDA, CALL_CC /* the fonction call/cc */, CALLCC /* keyword to call a continuation */
+    , LSET, RSET, SWITCH, CASE, BREAK, DEFAULT, LAMBDA, CALLCC
 }

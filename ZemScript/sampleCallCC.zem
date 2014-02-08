@@ -22,13 +22,11 @@ println("");
 f = function(aFunction){
 	aFunction(99);
 	println(88);
-};
+};																// affiche 88
 
 f(lambda(x){ return x+1;});
 
-//callcc(toto);
-
-
+println(callcc(f));												//affiche 100
 
 
 
