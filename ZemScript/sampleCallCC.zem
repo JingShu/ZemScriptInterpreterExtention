@@ -15,75 +15,39 @@ lambda(){
 	println(x);
 }();  														    // affiche 16 
 															    //		   9
-assignLambda = lambda(x){ println(x+1);};
-assignLambda(2);												// affiche 3
+assignLambda = lambda(x){ return x+1;};
+println(assignLambda(2));										// affiche 3
 println("");															
 															
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-println("");
-
-set = [|1, 2, 3, 4, 5, 6, 7, 8, 9|];
-
-first = function(a_set) {
-    if(set_size(a_set) > 0){
-    	println(set_get(a_set, 0));
-    }
+f = function(aFunction){
+	aFunction(99);
+	println(88);
 };
 
-cpt = 0;
+f(lambda(x){ return x+1;});
 
-loop = function() {
-	call_cc {
-		first(set);
-		cpt = cpt + 1;
-		if(cpt > 10){
-			println("Finished !");
-		} else {
-			print("Continue ... Step ");
-			println(cpt);
-    		set_remove(set, 6);
-    		set_add(set, 1);
-    		callcc;
-    	}
-    };
-};
+//callcc(toto);
 
-loop();
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 /*set = [|1, 2, 3, 4, 5, 6, 7, 8, 9|];
