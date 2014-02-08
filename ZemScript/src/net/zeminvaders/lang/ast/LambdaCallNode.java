@@ -23,15 +23,15 @@ public class LambdaCallNode extends Node {
 	@Override
     public ZemObject eval(Interpreter interpreter) {
 		Interpreter localInterpreter = new Interpreter();
+		UserFunction lambdaFunction = (UserFunction)lambda.eval(localInterpreter);
 		localInterpreter.setSymbolTable(lambda.getEnv());
-		
+				
         // Evaluate the arguments
         List<ZemObject> args = new ArrayList<ZemObject>(arguments.size());
         for (Node node : arguments) {
             args.add(node.eval(localInterpreter));
         }
-        ZemObject res = localInterpreter.callFunction((UserFunction)lambda.eval(localInterpreter), args, getPosition());
-        System.out.println(res);
+        ZemObject res = localInterpreter.callFunction(lambdaFunction, args, getPosition());
         return res;
     }
 }

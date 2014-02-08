@@ -4,18 +4,36 @@
  */
  
 
-lambda(x){ return x+1;};
+lambda(x){ println(x+1);};
 
-lambda(x){ return x+1;}(1);   								// affiche 2
-lambda(x, y, z){ return x+y+z;}(1, 2, 3);  					// affiche 6
-lambda(x, y, z){ x = x+1; return x+y+z;}(1, 2, 3);  		// affiche 7
-toto = function(){
+lambda(x){ println(x+1);}(1);   								// affiche 2
+lambda(x, y, z){ println(x+y+z);}(1, 2, 3);  					// affiche 6
+lambda(x, y, z){ x = x+1; println(x+y+z);}(1, 2, 3);  		    // affiche 7
+lambda(){
 	x = 9;
-	lambda(x, y, z){ x = x+1; return x+y+z;}(1, 2, 3);
+	lambda(x, y, z){ x = x+1; println(x+y+z);}(4, 5, 6);
 	println(x);
-};
-toto();  													// affiche 7 
-															//		   9
+}();  														    // affiche 16 
+															    //		   9
+println("");															
+															
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 println("");
 
