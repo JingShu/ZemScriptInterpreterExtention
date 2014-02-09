@@ -22,7 +22,9 @@
 package net.zeminvaders.lang.ast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.zeminvaders.lang.Interpreter;
 import net.zeminvaders.lang.SourcePosition;
@@ -36,57 +38,76 @@ import net.zeminvaders.lang.runtime.ZemObject;
  * @author <a href="mailto:grom@zeminvaders.net">Cameron Zemek</a>
  */
 public class FunctionNode extends Node {
-    final static public List<Node> NO_PARAMETERS = new ArrayList<Node>(0);
+	final static public List<Node> NO_PARAMETERS = new ArrayList<Node>(0);
 
-    /* private -> protected : modified by Jing Shu */
-    protected List<Node> parameters;
-    protected Node body;
+	/* private -> protected : modified by Jing Shu */
+	protected List<Node> parameters;
+	protected Node body;
 
-    public FunctionNode(SourcePosition pos, List<Node> parameters, Node body) {
-        super(pos);
-        this.parameters = parameters;
-        this.body = body;
-    }
+	/* added by Jing */
+	private Map<String, ZemObject> env;
+	
+	public Map<String, ZemObject> getEnv(){
+		return env;
+	}
 
-    @Override
-    public ZemObject eval(Interpreter interpreter) {
-        List<Parameter> params = new ArrayList<Parameter>(parameters.size());
-        for (Node node : parameters) {
-            // TODO clean up getting parameters
-            String parameterName;
-            ZemObject parameterValue;
-            if (node instanceof VariableNode) {
-                parameterName = ((VariableNode) node).getName();
-                parameterValue = null;
-            } else if (node instanceof AssignNode) {
-                parameterName = ((VariableNode) ((AssignNode) node).getLeft()).getName();
-                parameterValue = ((AssignNode) node).getRight().eval(interpreter);
-            } else {
-                // This error should not occur
-                throw new RuntimeException("Invalid function");
-            }
-            Parameter param = new Parameter(parameterName, parameterValue);
-            params.add(param);
-        }
-        return new UserFunction(params, body);
-    }
+	public FunctionNode(SourcePosition pos, List<Node> parameters, Node body) {
+		super(pos);
+		this.parameters = parameters;
+		this.body = body;
+		env = new HashMap<String, ZemObject>();
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("(function (");
-        boolean first = true;
-        for (Node node : parameters) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append(' ');
-            }
-            sb.append(node);
-        }
-        sb.append(") ");
-        sb.append(body);
-        sb.append(')');
-        return sb.toString();
-    }
+	/* local interpreter added by Jing */
+	@Override
+	public ZemObject eval(Interpreter interpreter) {
+
+		///////////////////////////////////////////////////////////////////
+		// copy the current environment (bindings of variable and value) //
+		///////////////////////////////////////////////////////////////////
+		env = new HashMap<String, ZemObject>(interpreter.getSymbolTable());	
+		Interpreter localInterpreter = new Interpreter();
+		localInterpreter.setSymbolTable(env);
+
+		List<Parameter> params = new ArrayList<Parameter>(parameters.size());
+		for (Node node : parameters) {
+			// TODO clean up getting parameters
+			String parameterName;
+			ZemObject parameterValue;
+			if (node instanceof VariableNode) {
+				parameterName = ((VariableNode) node).getName();
+				parameterValue = null;
+			} else if (node instanceof AssignNode) {
+				parameterName = ((VariableNode) ((AssignNode) node).getLeft()).getName();
+				parameterValue = ((AssignNode) node).getRight().eval(localInterpreter);
+			} else {
+				// This error should not occur
+				throw new RuntimeException("Invalid function");
+			}
+			Parameter param = new Parameter(parameterName, parameterValue);
+			params.add(param);
+		}
+
+		env = new HashMap<String, ZemObject>(localInterpreter.getSymbolTable());
+		return new UserFunction(params, body, env);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("(function (");
+		boolean first = true;
+		for (Node node : parameters) {
+			if (first) {
+				first = false;
+			} else {
+				sb.append(' ');
+			}
+			sb.append(node);
+		}
+		sb.append(") ");
+		sb.append(body);
+		sb.append(')');
+		return sb.toString();
+	}
 }

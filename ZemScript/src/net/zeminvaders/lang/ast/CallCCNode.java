@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.zeminvaders.lang.Interpreter;
-import net.zeminvaders.lang.Parser;
 import net.zeminvaders.lang.SourcePosition;
+import net.zeminvaders.lang.runtime.Function;
+import net.zeminvaders.lang.runtime.Parameter;
+import net.zeminvaders.lang.runtime.UserFunction;
 import net.zeminvaders.lang.runtime.ZemNumber;
 import net.zeminvaders.lang.runtime.ZemObject;
 
@@ -17,20 +19,41 @@ import net.zeminvaders.lang.runtime.ZemObject;
  */
 public class CallCCNode extends FunctionCallNode {
 
-	public CallCCNode(SourcePosition pos,
-			List<Node> arguments) {
+	public CallCCNode(SourcePosition pos, List<Node> arguments) {
 		super(pos, "callcc", arguments);
 	}
 
 	@Override
     public ZemObject eval(Interpreter interpreter) {
-        if(arguments.size() != 1){
+        if(arguments.size() < 1){
         	return null;
         }
-        Node continuation = arguments.get(0);
-        if(! (continuation instanceof FunctionNode)){
+        Node node = arguments.get(0);
+        UserFunction fun = null;
+        
+        if(node instanceof VariableNode){
+        	fun = (UserFunction) interpreter.getSymbolTable().get(((VariableNode)node).getName());	
+        }
+        if(node instanceof LambdaNode){
+        	fun = (UserFunction)((LambdaNode)node).eval(interpreter);
+        }
+        
+        if(fun == null){
+    		return null;
+    	}
+        
+        if(fun.getParameterCount() != 1){
         	return null;
         }
-        return null;
+        
+        String continuationName = fun.getParameterName(0);
+        
+        List<ZemObject> args = new ArrayList<ZemObject>(1);
+        args.add(new ZemNumber("99"));
+        
+        Interpreter localInterpreter = new Interpreter();
+        localInterpreter.setSymbolTable(fun.getEnv());
+        
+        return localInterpreter.callFunction(continuationName, args, getPosition());
     }
 }

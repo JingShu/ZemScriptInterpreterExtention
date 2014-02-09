@@ -21,10 +21,14 @@
  */
 package net.zeminvaders.lang.runtime;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.zeminvaders.lang.Interpreter;
 import net.zeminvaders.lang.SourcePosition;
+import net.zeminvaders.lang.ast.FunctionNode;
 import net.zeminvaders.lang.ast.Node;
 
 /**
@@ -35,14 +39,26 @@ import net.zeminvaders.lang.ast.Node;
 public class UserFunction extends Function {
     private List<Parameter> parameters;
     private Node body;
+    
+    /* added by Jing Shu */
+    Map<String, ZemObject> env;
 
-    public UserFunction(List<Parameter> parameters, Node body) {
+    public UserFunction(List<Parameter> parameters, Node body, Map<String, ZemObject> env) {
         this.parameters = parameters;
         this.body = body;
+        this.env = new HashMap<String, ZemObject>(env);
     }
 
     public Node getBody() {
         return body;
+    }
+    
+    public Map<String, ZemObject> getEnv(){
+    	return env;
+    }
+    
+    public void setEnv(Map<String, ZemObject> env){
+    	this.env = new HashMap<String, ZemObject>(env);
     }
 
     @Override
@@ -63,7 +79,12 @@ public class UserFunction extends Function {
     @Override
     public ZemObject eval(Interpreter interpreter, SourcePosition pos) {
         try {
-            return body.eval(interpreter);
+        	Interpreter localInterpreter = new Interpreter();
+        	Map<String, ZemObject> newEnv = new HashMap<String, ZemObject>(interpreter.getSymbolTable());
+        	newEnv.putAll(env);
+        	localInterpreter.setSymbolTable(newEnv);
+        	
+            return body.eval(localInterpreter);
         } catch (ReturnException e) {
             return e.getReturn();
         }

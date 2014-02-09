@@ -67,7 +67,7 @@ public class LambdaNode extends FunctionNode {
 
 		env = new HashMap<String, ZemObject>(localInterpreter.getSymbolTable());	
 		
-		return new UserFunction(params, body);
+		return new UserFunction(params, body, env);
 	}
 
 }
