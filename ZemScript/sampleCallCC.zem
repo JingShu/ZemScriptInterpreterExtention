@@ -9,12 +9,16 @@ lambda(x){ println(x+1);};
 lambda(x){ println(x+1);}(1);   								// affiche 2
 lambda(x, y, z){ println(x+y+z);}(1, 2, 3);  					// affiche 6
 lambda(x, y, z){ x = x+1; println(x+y+z);}(1, 2, 3);  		    // affiche 7
+
+
 lambda(){
 	x = 9;
 	lambda(x, y, z){ x = x+1; println(x+y+z);}(4, 5, 6);
 	println(x);
 }();  														    // affiche 16 
 															    //		   9
+
+
 assignLambda = lambda(x){ return x+1;};
 println(assignLambda(2));										// affiche 3
 println("");															
@@ -24,9 +28,9 @@ f = function(aFunction){
 	println(88);
 };																// affiche 88
 
-f(lambda(x){ return x+1;});
+f(lambda(x){ return x;});
 
-println(callcc(f));												//affiche 100
+println(callcc(f));												//affiche 99
 
 
 
@@ -47,7 +51,10 @@ println(callcc(f));												//affiche 100
 
  
 
-/*set = [|1, 2, 3, 4, 5, 6, 7, 8, 9|];
+/*
+old syntax of callcc definded by Jing Shu
+
+set = [|1, 2, 3, 4, 5, 6, 7, 8, 9|];
 
 first = function(a_set) {
     if(set_size(a_set) > 0){
@@ -77,6 +84,9 @@ loop();
 */
 
 /*
+
+the same example written in Scheme
+
 (define (loop)
    (call/cc (lambda (k) (set! cont k)))
    (display-first lst)

@@ -180,6 +180,11 @@ public class Interpreter {
                     args.size(), pos);
         }
         ZemObject ret = function.eval(this, pos);
+        
+        if(function instanceof UserFunction){
+        	((UserFunction)function).setEnv(getSymbolTable());
+        }
+        
         // Restore symbolTable
         symbolTable = savedSymbolTable;
 
@@ -215,6 +220,9 @@ public class Interpreter {
                     args.size(), pos);
         }
         ZemObject ret = function.eval(this, pos);
+        
+        function.setEnv(getSymbolTable());
+        
         // Restore symbolTable
         symbolTable = savedSymbolTable;
 
